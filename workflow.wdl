@@ -35,8 +35,9 @@ task run_selecting {
 	
 	command <<<
 	zcat ~{vcf} > ~{vcf}.vcf
-	bcftools view -Oz -o ~{vcf}.2 ~{vcf}.vcf
-	bcftools view -R ~{region} -o ~{out_name}.gz ~{vcf}.2
+	bcftools view -Oz -o ~{vcf}.vcf.gz ~{vcf}.vcf
+	tabix -p vcf ~{vcf}.vcf.gz
+	bcftools view -R ~{region} -o ~{out_name}.gz ~{vcf}.vcf.gz
 	tabix -p vcf ~{out_name}.gz
 	>>>
 
