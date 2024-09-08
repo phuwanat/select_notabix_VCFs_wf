@@ -30,19 +30,19 @@ task run_selecting {
 		Int memSizeGB = 8
 		Int threadCount = 2
 		Int diskSizeGB = 8*round(size(vcf, "GB")) + 20
-	String out_name = basename(vcf, ".vcf.gz")
+	String out_name = basename(vcf, ".gz")
 	}
 	
 	command <<<
-	zcat ~{vcf} > ~{vcf}.text
-	bcftools view -Oz -o ~{vcf} ~{vcf}.text
-	bcftools view -R ~{region} -o ~{out_name}.selected.vcf.gz ~{vcf}
-	tabix -p vcf ~{out_name}.selected.vcf.gz
+	zcat ~{vcf} > ~{vcf}.vcf
+	bcftools view -Oz -o ~{vcf}.2 ~{vcf}.vcf
+	bcftools view -R ~{region} -o ~{out_name}.gz ~{vcf}.2
+	tabix -p vcf ~{out_name}.gz
 	>>>
 
 	output {
-		File out_file = select_first(glob("*.selected.vcf.gz"))
-		File out_file_tbi = select_first(glob("*.selected.vcf.gz.tbi"))
+		File out_file = select_first(glob("*.gz"))
+		File out_file_tbi = select_first(glob("*.gz.tbi"))
 	}
 
 	runtime {
